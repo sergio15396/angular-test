@@ -1,28 +1,42 @@
 <main>
   <div class="header">
     <app-header></app-header>
-    <div class="login" *ngIf="!loggedIn">
+
+    <!-- Sense fer el log in -->
+    @if (!loggedIn) {
+    <div class="login">
       <input type="text" [(ngModel)]="name" aria-label="text" placeholder="Nom d'usuari" />
       <button (click)="login()">Iniciar sessió</button>
     </div>
+    }
   </div>
 
-  
-  <div class="content" *ngIf="loggedIn">
+  <!-- Al fer el log in -->
+  @if (loggedIn) {
+  <div class="content">
     <p class="welcome">Benvingut/da {{ name }}</p>
+
     <div class="content-row">
       <div class="sidebar">
-      <div class="thumbnails">
-        <img src="{{IMGS_PATH + imgFiles[0]}}" alt="{{imgFiles[0]}}" class="thumb" (click)="imgIdx = 0" />
-        <img src="{{IMGS_PATH + imgFiles[1]}}" alt="{{imgFiles[1]}}" class="thumb" (click)="imgIdx = 1" />
-        <img src="{{IMGS_PATH + imgFiles[2]}}" alt="{{imgFiles[2]}}" class="thumb" (click)="imgIdx = 2" />
+        <div class="thumbnails">
+          <!-- Fer servir l'index com a track si: la llista mai canvia d’ordre o no afegeixes ni elimines 
+          elements al mig, millor fer servir un track únic, com un id, codi, etc... -->
+          @for (file of imgFiles; track file; let idx = $index) {
+          <img [src]="IMGS_PATH + file" alt="file" class="thumb" />
+          }
+        </div>
+
+        <button class="random-btn" (click)="onButtonClicked($event)">
+          Imatge aleatòria
+        </button>
       </div>
-      <button class="random-btn" (click)="onButtonClicked($event)">Imatge aleatòria</button>
-    </div>
-    <div class="mainview">
-      <img src="{{imgFile}}" alt="{{imgFiles[imgIdx]}}" class="large" />
-    </div>
+
+      <div class="mainview">
+        <img [src]="imgFile" [alt]="imgFiles[imgIdx]" class="large" />
+      </div>
     </div>
   </div>
+  }
+
   <router-outlet></router-outlet>
 </main>
